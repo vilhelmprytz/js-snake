@@ -12,7 +12,6 @@ var player = {
     "x": 7,
     "y": 7,
     "direction": 0,
-    "length": 0,
     "dead": false,
     "tail": []
 };
@@ -42,21 +41,9 @@ function return_coordinate_operation(direction) {
 };
 
 function update() {
-    // move tail
-    player.tail.forEach(function (tail, index) {
-        if (tail.freeze == true) {
-            // unfreeze tail
-            tail.freeze = false;
-        } else {
-            if (index == 0) {
-                tail.x = player.x;
-                tail.y = player.y;
-            } else {
-                tail.x = player.tail[index-1].x;
-                tail.y = player.tail[index-1].y;
-            };
-        };
-    });
+    // create tail in players current position
+    create_tail();
+    player.tail.shift();
 
     // calculate coordinate operation
     var {x_operation, y_operation} = return_coordinate_operation(player.direction);
@@ -64,7 +51,6 @@ function update() {
     // perform operation on player coordinate
     player.x = player.x + x_operation;
     player.y = player.y + y_operation;
-
 
     // check for collisions
     food_objects.forEach(function (food, index) {
@@ -109,23 +95,10 @@ function create_food() {
 };
 
 function create_tail() {
-    player.length++;
-
-    if (player.tail.length == 0) {
-        var new_x = player.x;
-        var new_y = player.y;
-    } else {
-        var new_x = player.tail[player.tail.length - 1].x;
-        var new_y = player.tail[player.tail.length - 1].y;
-    };
-
-    var new_tail = {
-        "x": new_x,
-        "y": new_y,
-        "freeze": true
-    };
-
-    player.tail.push(new_tail);
+    player.tail.push({
+        "x": player.x,
+        "y": player.y
+    });
 };
 
 function draw_player() {
@@ -229,7 +202,6 @@ function reset_variables(game_timer) {
     score = 0;
     food_objects = [];
     player.tail = [];
-    player.length = 0;
     player.x = 7;
     player.y = 7;
 };
