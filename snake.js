@@ -5,9 +5,10 @@
 // each block: 40*40
 // block: 15 * 15
 
-score = 0;
+var score = 0;
+var game_timer;
 
-player = {
+var player = {
     "x": 7,
     "y": 7,
     "direction": 0,
@@ -16,7 +17,7 @@ player = {
     "tail": []
 };
 
-food_objects = [];
+var food_objects = [];
 
 function return_coordinate_operation(direction) {
     // update coordinates
@@ -41,6 +42,22 @@ function return_coordinate_operation(direction) {
 };
 
 function update() {
+    // move tail
+    player.tail.forEach(function (tail, index) {
+        if (tail.freeze == true) {
+            // unfreeze tail
+            tail.freeze = false;
+        } else {
+            if (index == 0) {
+                tail.x = player.x;
+                tail.y = player.y;
+            } else {
+                tail.x = player.tail[index-1].x;
+                tail.y = player.tail[index-1].y;
+            };
+        };
+    });
+
     // calculate coordinate operation
     var {x_operation, y_operation} = return_coordinate_operation(player.direction);
 
@@ -48,19 +65,6 @@ function update() {
     player.x = player.x + x_operation;
     player.y = player.y + y_operation;
 
-    // move tail
-    player.tail.forEach(function (tail, index) {
-        if (index == 0) {
-            {x_operation, y_operation} = return_coordinate_operation(tail.direction);
-            
-            tail.x = tail.x+x_operation;
-            tail.y = tail.y+y_operation;
-        } else {
-            console.log(player.tail[index-1]);
-            tail.x = player.tail[index-1].x;
-            tail.y = player.tail[index-1].y;
-        };
-    });
 
     // check for collisions
     food_objects.forEach(function (food, index) {
@@ -87,11 +91,14 @@ function update() {
     draw_player();
     draw_tail();
     draw_food();
+
+    // update score
+    update_score();
 };
 
 function create_food() {
-    var new_x = Math.floor(Math.random() * 14) + 1;
-    var new_y = Math.floor(Math.random() * 14) + 1;
+    var new_x = Math.floor(Math.random() * 15) + 0;
+    var new_y = Math.floor(Math.random() * 15) + 0;
 
     var new_food = {
         "x": new_x,
@@ -104,13 +111,19 @@ function create_food() {
 function create_tail() {
     player.length++;
 
-    var {x_operation, y_operation} = return_coordinate_operation(player.direction);
+    if (player.tail.length == 0) {
+        var new_x = player.x;
+        var new_y = player.y;
+    } else {
+        var new_x = player.tail[player.tail.length - 1].x;
+        var new_y = player.tail[player.tail.length - 1].y;
+    };
 
     var new_tail = {
-        "x": player.x - x_operation,
-        "y": player.y - y_operation,
-        "direction": player.direction
-    }
+        "x": new_x,
+        "y": new_y,
+        "freeze": true
+    };
 
     player.tail.push(new_tail);
 };
@@ -138,7 +151,7 @@ function draw_tail() {
         var element = document.createElement("div");
         
         // add style
-        element.classList.add("player");
+        element.classList.add("tail");
         
         // set coordinates
         element.style.left = `${tail.x * 40}px`;
@@ -170,11 +183,21 @@ function draw_food() {
     });
 };
 
+function update_score() {
+    const score_element = document.querySelector(".score");
+
+    score_element.innerHTML = score;
+};
+
 function start() {
+    clearInterval(game_timer);
+
+    reset_variables();
+
     // inital food
     create_food();
 
-    var game_timer = window.setInterval(function(){
+    game_timer = window.setInterval(function(){
         if (player.dead == false) {
             update();
         } else {
@@ -183,7 +206,17 @@ function start() {
             console.log("Score: " + score)
         }
       }, 200);
-}
+};
+
+function reset_variables(game_timer) {
+    score = 0;
+    food_objects = [];
+    player.tail = [];
+    player.dead = false;
+    player.length = 0;
+    player.x = 7;
+    player.y = 7;
+};
 
 // keyboard input
 document.addEventListener('keydown', function(event) {

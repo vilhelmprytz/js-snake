@@ -18,6 +18,7 @@
         background-color: green;
         padding: 0px;
         margin: 0px;
+        float: left;
     }
 
     .player {
@@ -27,8 +28,15 @@
         padding: 0px;
         background-color: darkblue;
         position: absolute;
-        left: 0px;
-        top: 0px;
+    }
+
+    .tail {
+        width: 40px;
+        height: 40px;
+        margin: 0px;
+        padding: 0px;
+        background-color: black;
+        position: absolute;
     }
 
     .food {
@@ -37,10 +45,19 @@
         margin: 0px;
         padding: 0px;
         background-color: red;
-        top: 0px;
-        left: 0px;
         position: absolute;
     }
+
+    .text {
+        color: white;
+        float: left;
+        padding-left: 10px;
+    }
+
+    .score {
+        display: inline;
+    }
+
     </style>
 </head>
 <body>
@@ -49,6 +66,12 @@
         <div class="player"></div>
         <div class="all-tail"></div>
         <div class="all-food"></div>
+    </div>
+
+    <div class="text">
+        <p>JS Snake</p>
+        <p style="display: inline;">Your score is <div class="score">0</div>.</p>
+        <button id="startbutton" onclick="start();">Start/Reset Game</button>
     </div>
 
 </body>
