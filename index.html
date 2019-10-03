@@ -56,6 +56,21 @@
 
     .score {
         display: inline;
+        color: white;
+    }
+
+    .overlay-box {
+        margin: 0;
+        padding: 20px;
+        background-color: black;
+        position: absolute;
+        top: 200px;
+        left: 200px;
+        display: none;
+    }
+
+    .overlay-box p {
+        color: white;
     }
 
     </style>
@@ -71,7 +86,17 @@
     <div class="text">
         <p>JS Snake</p>
         <p style="display: inline;">Your score is <div class="score">0</div>.</p>
-        <button id="startbutton" onclick="start();">Start/Reset Game</button>
+    </div>
+
+    <div style="display: block;" class="overlay-box" id="start-box">
+        <p>JS Snake</p>
+        <button id="startbutton" onclick="start();">Start</button>
+    </div>
+
+    <div class="overlay-box" id="game-over-box">
+        <p>Game Over!</p>
+        <p style="display: inline;">Your score was <div class="score">0</div>.</p>
+        <button id="startbutton" onclick="start();">Play Again</button>
     </div>
 
 </body>

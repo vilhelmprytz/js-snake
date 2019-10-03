@@ -78,13 +78,13 @@ function update() {
 
     // check if outside boundaries
     if (player.x >= 15) {
-        player.dead = true;
+        player_dead(true);
     } else if (player.x <= -1) {
-        player.dead = true;
+        player_dead(true);
     } else if (player.y <= -1) {
-        player.dead = true;
+        player_dead(true);
     } else if (player.y >= 15) {
-        player.dead = true;
+        player_dead(true);
     };
 
     // run draw function
@@ -184,12 +184,28 @@ function draw_food() {
 };
 
 function update_score() {
-    const score_element = document.querySelector(".score");
-
-    score_element.innerHTML = score;
+    document.querySelectorAll(".score").forEach(function (element) {
+        element.innerHTML = score;
+    });
 };
 
+function player_dead(new_status) {
+    const game_over_element = document.querySelector("#game-over-box");
+
+    if (new_status) {
+        game_over_element.style.display = "block";
+        player.dead = true;
+    } else {
+        game_over_element.style.display = "none";
+        player.dead = false;
+    };
+}
+
 function start() {
+    const start_game_element = document.querySelector("#start-box");
+
+    start_game_element.style.display = "none";
+
     clearInterval(game_timer);
 
     reset_variables();
@@ -209,10 +225,10 @@ function start() {
 };
 
 function reset_variables(game_timer) {
+    player_dead(false);
     score = 0;
     food_objects = [];
     player.tail = [];
-    player.dead = false;
     player.length = 0;
     player.x = 7;
     player.y = 7;
