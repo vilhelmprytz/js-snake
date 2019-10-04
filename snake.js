@@ -1,20 +1,21 @@
 // js-snake
 // (c) Vilhelm Prytz 2019 - vilhelm@prytznet.se www.vilhelmprytz.se
 
-// screen: 600*600
-// each block: 20*20
-// block: 30 * 30
-
 const game_settings = {
-    "amount_blocks": 30
+    "screen_length": 600, // screen pixels, default 600x600
+    "block_length": 20, // pixel length of blocks, 20x20 default
+    "frame_delay": 125, // default 125
+    "tails_per_food": 1, // how many tails are created for every food, default 1
 };
+
+game_settings.amount_blocks = game_settings.screen_length / game_settings.block_length;
 
 var score = 0;
 var game_timer;
 
 var player = {
-    "x": 7,
-    "y": 7,
+    "x": game_settings.amount_blocks/2,
+    "y": game_settings.amount_blocks/2,
     "direction": 0,
     "dead": false,
     "invincible": false,
@@ -22,6 +23,17 @@ var player = {
 };
 
 var food_objects = [];
+
+function apply_settings() {
+    const content_element = document.querySelector(".content");
+    const player_element = document.querySelector(".player");
+
+    content_element.style.width = `${game_settings.screen_length}px`;
+    content_element.style.height = `${game_settings.screen_length}px`;
+
+    player_element.style.width = `${game_settings.block_length}px`;
+    player_element.style.height = `${game_settings.block_length}px`;
+};
 
 function return_coordinate_operation(direction) {
     // update coordinates
@@ -69,7 +81,9 @@ function update() {
         if(player.x == food.x && player.y == food.y) {
             food_objects.splice(index, 1);
             create_food();
-            create_tail();
+            for (let step = 0; step < game_settings.tails_per_food; step++) {
+                create_tail();
+            };
             score++;
         };
     });
@@ -119,10 +133,10 @@ function draw_player() {
     const player_element = document.querySelector(".player");
 
     // set x
-    player_element.style.left = `${player.x * 20}px`;
+    player_element.style.left = `${player.x * game_settings.block_length}px`;
 
     // set y
-    player_element.style.top = `${player.y * 20}px`;
+    player_element.style.top = `${player.y * game_settings.block_length}px`;
 };
 
 function draw_tail() {
@@ -139,10 +153,14 @@ function draw_tail() {
         
         // add style
         element.classList.add("tail");
+
+        // use game settings to set width and height
+        element.style.width = `${game_settings.block_length}px`;
+        element.style.height = `${game_settings.block_length}px`;
         
         // set coordinates
-        element.style.left = `${tail.x * 20}px`;
-        element.style.top = `${tail.y * 20}px`;
+        element.style.left = `${tail.x * game_settings.block_length}px`;
+        element.style.top = `${tail.y * game_settings.block_length}px`;
 
         all_tail.appendChild(element);
     });
@@ -161,10 +179,14 @@ function draw_food() {
         
         // add style
         element.classList.add("food");
+
+        // set width and height
+        element.style.width = `${game_settings.block_length}px`;
+        element.style.height = `${game_settings.block_length}px`;
         
         // set coordinates
-        element.style.left = `${food.x * 20}px`;
-        element.style.top = `${food.y * 20}px`;
+        element.style.left = `${food.x * game_settings.block_length}px`;
+        element.style.top = `${food.y * game_settings.block_length}px`;
 
         all_food.appendChild(element);
     });
@@ -208,7 +230,7 @@ function start() {
             console.log("Player dead!")
             console.log("Score: " + score)
         }
-      }, 200);
+      }, game_settings.frame_delay);
 };
 
 function reset_variables(game_timer) {
@@ -216,8 +238,8 @@ function reset_variables(game_timer) {
     score = 0;
     food_objects = [];
     player.tail = [];
-    player.x = 7;
-    player.y = 7;
+    player.x = game_settings.amount_blocks/2;
+    player.y = game_settings.amount_blocks/2;
 };
 
 // keyboard input
