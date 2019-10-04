@@ -2,8 +2,12 @@
 // (c) Vilhelm Prytz 2019 - vilhelm@prytznet.se www.vilhelmprytz.se
 
 // screen: 600*600
-// each block: 40*40
-// block: 15 * 15
+// each block: 20*20
+// block: 30 * 30
+
+const game_settings = {
+    "amount_blocks": 30
+};
 
 var score = 0;
 var game_timer;
@@ -71,13 +75,13 @@ function update() {
     });
 
     // check if outside boundaries
-    if (player.x >= 15) {
+    if (player.x >= game_settings.amount_blocks) {
         player_dead(true);
     } else if (player.x <= -1) {
         player_dead(true);
     } else if (player.y <= -1) {
         player_dead(true);
-    } else if (player.y >= 15) {
+    } else if (player.y >= game_settings.amount_blocks) {
         player_dead(true);
     };
 
@@ -93,8 +97,8 @@ function update() {
 };
 
 function create_food() {
-    var new_x = Math.floor(Math.random() * 15) + 0;
-    var new_y = Math.floor(Math.random() * 15) + 0;
+    var new_x = Math.floor(Math.random() * game_settings.amount_blocks) + 0;
+    var new_y = Math.floor(Math.random() * game_settings.amount_blocks) + 0;
 
     var new_food = {
         "x": new_x,
@@ -115,10 +119,10 @@ function draw_player() {
     const player_element = document.querySelector(".player");
 
     // set x
-    player_element.style.left = `${player.x * 40}px`;
+    player_element.style.left = `${player.x * 20}px`;
 
     // set y
-    player_element.style.top = `${player.y * 40}px`;
+    player_element.style.top = `${player.y * 20}px`;
 };
 
 function draw_tail() {
@@ -137,8 +141,8 @@ function draw_tail() {
         element.classList.add("tail");
         
         // set coordinates
-        element.style.left = `${tail.x * 40}px`;
-        element.style.top = `${tail.y * 40}px`;
+        element.style.left = `${tail.x * 20}px`;
+        element.style.top = `${tail.y * 20}px`;
 
         all_tail.appendChild(element);
     });
@@ -159,8 +163,8 @@ function draw_food() {
         element.classList.add("food");
         
         // set coordinates
-        element.style.left = `${food.x * 40}px`;
-        element.style.top = `${food.y * 40}px`;
+        element.style.left = `${food.x * 20}px`;
+        element.style.top = `${food.y * 20}px`;
 
         all_food.appendChild(element);
     });
