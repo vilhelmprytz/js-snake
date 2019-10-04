@@ -13,6 +13,7 @@ var player = {
     "y": 7,
     "direction": 0,
     "dead": false,
+    "invincible": false,
     "tail": []
 };
 
@@ -52,13 +53,20 @@ function update() {
     player.x = player.x + x_operation;
     player.y = player.y + y_operation;
 
-    // check for collisions
+    // check for collisions with food
     food_objects.forEach(function (food, index) {
         if(player.x == food.x && player.y == food.y) {
             food_objects.splice(index, 1);
             create_food();
             create_tail();
             score++;
+        };
+    });
+
+    // check for collisions with tail
+    player.tail.forEach(function (tail, index) {
+        if(player.x == tail.x && player.y == tail.y) {
+            console.log("tail collision");
         };
     });
 
@@ -74,9 +82,11 @@ function update() {
     };
 
     // run draw function
-    draw_player();
-    draw_tail();
-    draw_food();
+    if (player.dead == false) {
+        draw_player();
+        draw_tail();
+        draw_food();
+    };
 
     // update score
     update_score();
@@ -208,16 +218,16 @@ function reset_variables(game_timer) {
 
 // keyboard input
 document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 38 || event.keyCode == 87) {
+    if((event.keyCode == 38 || event.keyCode == 87) && player.direction != 1) {
         // up
         player.direction = 0;
-    } else if(event.keyCode == 40 || event.keyCode == 83) {
+    } else if((event.keyCode == 40 || event.keyCode == 83) && player.direction != 0) {
         // down
         player.direction = 1;
-    } else if(event.keyCode == 37 || event.keyCode == 65) {
+    } else if((event.keyCode == 37 || event.keyCode == 65) && player.direction != 3) {
         // left
         player.direction = 2;
-    } else if(event.keyCode == 39 || event.keyCode == 68) {
+    } else if((event.keyCode == 39 || event.keyCode == 68) && player.direction != 2) {
         // right
         player.direction = 3;
     };
