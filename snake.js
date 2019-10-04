@@ -53,6 +53,13 @@ function update() {
     player.x = player.x + x_operation;
     player.y = player.y + y_operation;
 
+    // check for collisions with tail
+    player.tail.forEach(function (tail, index) {
+        if(player.x == tail.x && player.y == tail.y) {
+            player_dead(true);
+        };
+    });
+
     // check for collisions with food
     food_objects.forEach(function (food, index) {
         if(player.x == food.x && player.y == food.y) {
@@ -60,13 +67,6 @@ function update() {
             create_food();
             create_tail();
             score++;
-        };
-    });
-
-    // check for collisions with tail
-    player.tail.forEach(function (tail, index) {
-        if(player.x == tail.x && player.y == tail.y) {
-            console.log("tail collision");
         };
     });
 
